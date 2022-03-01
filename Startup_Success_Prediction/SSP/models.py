@@ -22,15 +22,15 @@ class Startup(models.Model):
     )
     category = models.CharField(max_length=100, choices=categories)
 
-    relationship_num = models.IntegerField(max_length=100)
-    milestones_num = models.IntegerField(max_length=100)
+    relationship_num = models.PositiveIntegerField(default=0)
+    milestone_num = models.PositiveIntegerField(default=0)
     first_milestone = models.DateField()
     last_milestone = models.DateField()
 
-    total_fund = models.IntegerField()
+    total_fund = models.PositiveIntegerField()
     first_funding = models.DateField()
     last_funding = models.DateField()
-    funding_round_num = models.IntegerField(max_length=100)
+    funding_round_num = models.PositiveIntegerField(default=0)
     has_angel = models.BooleanField(default=False)
     has_vc = models.BooleanField(default=False)
 
