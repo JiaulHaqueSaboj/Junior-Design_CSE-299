@@ -2,6 +2,8 @@ from attr import attr
 from django import forms
 
 from .models import Startup
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 
 class StartupModelForm(forms.ModelForm):
@@ -52,7 +54,7 @@ class StartupModelForm(forms.ModelForm):
                        'class': 'form-control', 'placeholder': 'Enter the value', }),
             'milestone_num': forms.NumberInput(
                 attrs={'step': 1,
-                       "min_value": 0,
+                       "min_value": 1,
                        "max_value": 1000,
                        'class': 'form-control', 'placeholder': 'Enter the value', }),
             'first_milestone': forms.DateInput(
@@ -105,3 +107,55 @@ class StartupModelForm(forms.ModelForm):
 
 
         }
+
+
+class SignUpForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-input',
+            'required': '',
+            'name': 'username',
+            'id': 'username',
+            'type': 'text',
+            'placeholder': 'John Doe',
+            'maxlength': '16',
+            'minlength': '6',
+        })
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-input',
+            'required': '',
+            'name': 'email',
+            'id': 'email',
+            'type': 'email',
+            'placeholder': 'JohnDoe@mail.com',
+        })
+        self.fields['password1'].widget.attrs.update({
+            'class': 'form-input',
+            'required': '',
+            'name': 'password1',
+            'id': 'password1',
+            'type': 'password',
+            'placeholder': 'password',
+            'maxlength': '22',
+            'minlength': '8'
+        })
+        self.fields['password2'].widget.attrs.update({
+            'class': 'form-input',
+            'required': '',
+            'name': 'password2',
+            'id': 'password2',
+            'type': 'password',
+            'placeholder': 'password',
+            'maxlength': '22',
+            'minlength': '8'
+        })
+
+    username = forms.CharField(label='Username', max_length=20,)
+    email = forms.EmailField(label='Email', max_length=100)
+    password1 = forms.CharField(label='Password')
+    password2 = forms.CharField(label='Confirm Password')
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2', )

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block styles %}
+
+{% endblock %}
+{% block content %}
+
+
+
+
+
+
+
+{% load crispy_forms_tags %}
+
+<!--Login-->
+<div class="container-fluid bg">
+    <div class="container  ">
+        <div class="row " style="height: 100vh;">
+            <div class="col-md" style="align-items: center;text-align: center;margin: auto;">
+                <div class="card"
+                    style=" width:36rem;align-items: center;text-align: center;margin: auto; padding: 100px;background-color: #34495E;">
+                    <div class=" card-body">
+                        <h1>Login</h1>
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ login_form|crispy }}
+                            <button class="btn btn-primary" style="margin-top: 25px;" type="submit">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
