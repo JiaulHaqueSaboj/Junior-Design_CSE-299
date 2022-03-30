@@ -38,8 +38,8 @@ def signup(request):
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
         user = authenticate(username=username, password=password)
-        login(request, user)
-        return redirect('SSP:index')
+        # login(request, user)
+        return redirect('SSP:loginPage')
     context = {
         'form': form
     }
