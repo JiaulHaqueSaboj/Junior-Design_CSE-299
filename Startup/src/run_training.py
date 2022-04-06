@@ -13,7 +13,7 @@ prepared_data = prepare_data(path_to_data)
 # 2.Create train - test split
 train_test_data = create_train_test_data(prepared_data['features'],
                                          prepared_data['label'],
-                                         0.33, 2021)
+                                         0.3, 42)
 
 
 # 3.Run training
