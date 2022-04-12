@@ -12,7 +12,7 @@ import os
 path_to_model = os.path.join(settings.STATIC_URL, 'model/')
 print(path_to_model)
 loaded_model = joblib.load(
-    open('/Users/jiaulhaquesaboj/Documents/CSE299/CSE299ITN/Startup-Success-Prediction/Startup/Startup_Success_Prediction/static/model/startup_model.pkl', 'rb'))
+    open('E:\Startup Success Prediction\Startup\model\startup_model.pkl', 'rb'))
 
 # Create your views here.
 
@@ -45,7 +45,7 @@ def predict_startup_status(request):
         model_prediction = {
             'info': 'success',
             'Startup_status': startup_status[0],
-            #'model_confidence_proba': float("{:.2f}".format(model_confidence_score*100))
+            # 'model_confidence_proba': float("{:.2f}".format(model_confidence_score*100))
         }
 
     except ValueError as ve:
