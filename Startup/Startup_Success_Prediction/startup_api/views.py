@@ -12,7 +12,7 @@ import os
 path_to_model = os.path.join(settings.STATIC_URL, 'model/')
 print(path_to_model)
 loaded_model = joblib.load(
-    open('E:\Startup Success Prediction\Startup\model\startup_model.pkl', 'rb'))
+    open('/Users/jiaulhaquesaboj/Documents/CSE299/CSE299ITN/Startup-Success-Prediction/Startup/model/startup_model.pkl', 'rb'))
 
 # Create your views here.
 
