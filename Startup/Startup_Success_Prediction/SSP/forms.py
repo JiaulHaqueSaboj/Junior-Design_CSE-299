@@ -1,7 +1,7 @@
 from attr import attr
 from django import forms
 
-from .models import Startup
+from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -118,7 +118,7 @@ class SignUpForm(UserCreationForm):
             'name': 'username',
             'id': 'username',
             'type': 'text',
-            'placeholder': 'John Doe',
+            'placeholder': 'Enter your name',
             'maxlength': '16',
             'minlength': '6',
         })
@@ -128,7 +128,7 @@ class SignUpForm(UserCreationForm):
             'name': 'email',
             'id': 'email',
             'type': 'email',
-            'placeholder': 'JohnDoe@mail.com',
+            'placeholder': 'Enter email',
         })
         self.fields['password1'].widget.attrs.update({
             'class': 'form-input',
@@ -146,7 +146,7 @@ class SignUpForm(UserCreationForm):
             'name': 'password2',
             'id': 'password2',
             'type': 'password',
-            'placeholder': 'password',
+            'placeholder': 'Confirm password',
             'maxlength': '22',
             'minlength': '8'
         })
@@ -159,3 +159,14 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2', )
+
+
+class BlogPostForm(forms.ModelForm):
+    class Meta:
+        model = BlogPost
+        fields = ('title', 'slug', 'content', 'image')
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title of the Blog'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Copy the title with no space and a hyphen in between'}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Content of the Blog'}),
+        }
