@@ -39,15 +39,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-
+    'django.contrib.sites',
     'SSP',
     "startup_api",
-
     'bootstrap4',
     'crispy_forms',
     'rest_framework',
     'rest_framework.authtoken',
+    'users',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
+SITE_ID = 2
+
+LOGIN_REDIRECT_URL = '/homepage'
+LOGOUT_REDIRECT_URL = '/'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -93,6 +102,17 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -122,9 +142,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-LOGIN_REDIRECT_URL = 'homepage'
 
 
 MEDIA_URL = '/media/'
