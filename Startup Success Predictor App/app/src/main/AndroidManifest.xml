@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StartupSuccessPredictorApp">
         <activity
+            android:name=".Activity.PredictActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginScreenActivity"
             android:exported="false" />
         <activity

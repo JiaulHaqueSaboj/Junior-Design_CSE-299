@@ -50,19 +50,19 @@
                 android:layout_height="wrap_content" />
 
 
-<!--            <androidx.appcompat.widget.AppCompatButton-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@+id/or"-->
-<!--                android:layout_marginHorizontal="40dp"-->
-<!--                android:layout_marginBottom="10dp"-->
-<!--                android:background="@drawable/white_btn"-->
-<!--                android:drawableLeft="@drawable/google"-->
-<!--                android:fontFamily="@font/ubuntu_regular"-->
-<!--                android:paddingHorizontal="58.5dp"-->
-<!--                android:text="Login with Google"-->
-<!--                android:textAllCaps="false"-->
-<!--                android:textSize="18sp" />-->
+            <!--            <androidx.appcompat.widget.AppCompatButton-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@+id/or"-->
+            <!--                android:layout_marginHorizontal="40dp"-->
+            <!--                android:layout_marginBottom="10dp"-->
+            <!--                android:background="@drawable/white_btn"-->
+            <!--                android:drawableLeft="@drawable/google"-->
+            <!--                android:fontFamily="@font/ubuntu_regular"-->
+            <!--                android:paddingHorizontal="58.5dp"-->
+            <!--                android:text="Login with Google"-->
+            <!--                android:textAllCaps="false"-->
+            <!--                android:textSize="18sp" />-->
 
 
         </LinearLayout>
