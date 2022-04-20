@@ -6,53 +6,44 @@
 {% endblock %}
 {% block content %}
 
-<div class="container-fluid" style="background-color: #EEF5FF;">
+<div class="container-fluid" style="background-color: #EEF5FF; height: 100vh;">
     <div class="d-flex justify-content-center">
-    <h2>Profile</h2>
-</div>
-    <div class="col">
-        <a href="#"style="text-decoration: none;">User Name: {{user.username}}</a><br>
-        <a href="#"style="text-decoration: none;">User Email: {{user.email}}</a>
+        <h2 style="margin-top: 100px;">Profile</h2>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <li>
+                    User Name: {{user.username}}
+
+                </li>
+                <li>
+                    User Email: {{user.email}}
+                </li>
+
+
+            </div>
+
+        </div>
 
     </div>
 
-    
-
-
-      
-
-
-
-    
-
-
-        
 
 
 
 
-{% endblock %}
 
 
 
-.container {
-    font-family: arial;
-    font-size: 24px;
-    margin: 25px;
-    width: 350px;
-    height: 200px;
-    outline: dashed 1px black;
-    /* Setup */
-    position: relative;
-  }
-  
-  .child {
-    width: 50px;
-    height: 50px;
-    background-color: red;
-    /* Center vertically and horizontally */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -25px 0 0 -25px; /* Apply negative top and left margins to truly center the element */
-  }
+
+
+
+
+
+
+
+
+
+
+    {% endblock %}
