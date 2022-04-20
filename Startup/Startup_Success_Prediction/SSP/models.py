@@ -8,7 +8,7 @@ from django.utils.timezone import now
 class Startup(models.Model):
 
     name = models.CharField(max_length=255)
-    start = models.DateField()
+    start = models.PositiveIntegerField(default=0)
 
     categories = (
         ('Software', "Software"),
@@ -26,12 +26,12 @@ class Startup(models.Model):
 
     relationship_num = models.PositiveIntegerField(default=0)
     milestone_num = models.PositiveIntegerField(default=0)
-    first_milestone = models.DateField()
-    last_milestone = models.DateField()
+    first_milestone = models.PositiveIntegerField(default=0)
+    last_milestone = models.PositiveIntegerField(default=0)
 
     total_fund = models.PositiveIntegerField()
-    first_funding = models.DateField()
-    last_funding = models.DateField()
+    first_funding = models.PositiveIntegerField(default=0)
+    last_funding = models.PositiveIntegerField(default=0)
     funding_round_num = models.PositiveIntegerField(default=0)
     has_angel = models.BooleanField(default=False)
     has_vc = models.BooleanField(default=False)

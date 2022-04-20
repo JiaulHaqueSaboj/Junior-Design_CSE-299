@@ -75,6 +75,10 @@ def logout_request(request):
     messages.info(request, "You have successfully logged out.")
     return redirect("SSP:loginPage")
 
+def profile(request):
+    
+    return render(request, 'profile.html')
+
 
 def blogs(request):
     posts = BlogPost.objects.all()

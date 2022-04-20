@@ -13,15 +13,15 @@ class StartupModelForm(forms.ModelForm):
         fields = '__all__'
         labels = {
             'name': 'Startup Name ',
-            'start': 'Startup Founded ',
+            'start': 'Startup Age ',
             'category': 'Category ',
             'relationship_num': 'No. of Relationship ',
             'milestone_num': 'No. of Milestone ',
-            'first_milestone': 'First Milestone Date ',
-            'last_milestone': "Last Milestone Date ",
+            'first_milestone': 'First Milestone Age ',
+            'last_milestone': "Last Milestone Age ",
             'total_fund': 'Total Funding (USD) ',
-            'first_funding': 'First Funding Date ',
-            'last_funding': 'Last Funding Date ',
+            'first_funding': 'First Funding Age ',
+            'last_funding': 'Last Funding Age',
             'funding_round_num': 'No. of Funding Round ',
             'has_angel': "Angel Investor ",
             'has_vc': 'Venture Capital',
@@ -37,16 +37,12 @@ class StartupModelForm(forms.ModelForm):
                 'placeholder': 'Enter Startup name'
             }
             ),
-            'start': forms.DateInput(
-                format=('%d%m%Y'),
-                attrs={'class': 'form-control',
-                       'placeholder': 'Select a date',
-                       'type': 'date'
-                       }),
-            'category': forms.Select(attrs={
-                'class': 'form-control',
-                'placeholder': 'Choose Category'
-            }),
+            'start': forms.NumberInput(
+                attrs={'step': 1,
+                       "min_value": 0,
+                       "max_value": 1000,
+                       'class': 'form-control', 'placeholder': 'Enter the value', }),
+
             'relationship_num': forms.NumberInput(
                 attrs={'step': 1,
                        "min_value": 0,
@@ -57,38 +53,31 @@ class StartupModelForm(forms.ModelForm):
                        "min_value": 1,
                        "max_value": 1000,
                        'class': 'form-control', 'placeholder': 'Enter the value', }),
-            'first_milestone': forms.DateInput(
-                format=('%d%m%Y'),
-                attrs={'class': 'form-control',
-                       'placeholder': 'Select a date',
-                       'type': 'date'
-                       }),
-            'last_milestone': forms.DateInput(
-                format=('%d%m%Y'),
-                attrs={'class': 'form-control',
-                       'placeholder': 'Select a date',
-                       'type': 'date'
-                       }),
-
-
-
+            'first_milestone': forms.NumberInput(
+                attrs={'step': 1,
+                       "min_value": 0,
+                       "max_value": 1000,
+                       'class': 'form-control', 'placeholder': 'Enter the value', }),
+            'last_milestone': forms.NumberInput(
+                attrs={'step': 1,
+                       "min_value": 0,
+                       "max_value": 1000,
+                       'class': 'form-control', 'placeholder': 'Enter the value', }),
             'total_fund': forms.NumberInput(
                 attrs={'step': 1,
                        "min_value": 0,
                        'class': 'form-control', 'placeholder': 'Enter the value', }),
 
-            'first_funding': forms.DateInput(
-                format=('%d%m%Y'),
-                attrs={'class': 'form-control',
-                       'placeholder': 'Select a date',
-                       'type': 'date'
-                       }),
-            'last_funding': forms.DateInput(
-                format=('%d%m%Y'),
-                attrs={'class': 'form-control',
-                       'placeholder': 'Select a date',
-                       'type': 'date'
-                       }),
+            'first_funding': forms.NumberInput(
+                attrs={'step': 1,
+                       "min_value": 0,
+                       "max_value": 1000,
+                       'class': 'form-control', 'placeholder': 'Enter the value', }),
+            'last_funding': forms.NumberInput(
+                attrs={'step': 1,
+                       "min_value": 0,
+                       "max_value": 1000,
+                       'class': 'form-control', 'placeholder': 'Enter the value', }),
             'funding_round_num': forms.NumberInput(
                 attrs={'step': 1,
                        "min_value": 0,
