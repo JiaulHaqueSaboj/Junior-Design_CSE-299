@@ -5,7 +5,7 @@ from packages.preprocess_data import *
 from packages.train_model import run_model_training
 
 # 0.Path to data
-path_to_data = '../data/startup data.csv'
+path_to_data = '../data/processed data.csv'
 
 # 1.Prepare the data
 prepared_data = prepare_data(path_to_data)

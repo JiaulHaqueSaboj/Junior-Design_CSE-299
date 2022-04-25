@@ -25,6 +25,7 @@ class Startup(models.Model):
     category = models.CharField(max_length=100, choices=categories)
 
     relationship_num = models.PositiveIntegerField(default=0)
+    avg_participants = models.PositiveIntegerField(default=0)
     milestone_num = models.PositiveIntegerField(default=0)
     first_milestone = models.PositiveIntegerField(default=0)
     last_milestone = models.PositiveIntegerField(default=0)

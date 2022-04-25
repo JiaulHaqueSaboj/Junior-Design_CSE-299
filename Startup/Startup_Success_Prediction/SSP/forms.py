@@ -16,6 +16,7 @@ class StartupModelForm(forms.ModelForm):
             'start': 'Startup Age ',
             'category': 'Category ',
             'relationship_num': 'No. of Relationship ',
+            'avg_participants': 'No. of Avg Participants',
             'milestone_num': 'No. of Milestone ',
             'first_milestone': 'First Milestone Age ',
             'last_milestone': "Last Milestone Age ",
@@ -44,6 +45,11 @@ class StartupModelForm(forms.ModelForm):
                        'class': 'form-control', 'placeholder': 'Enter the value', }),
 
             'relationship_num': forms.NumberInput(
+                attrs={'step': 1,
+                       "min_value": 0,
+                       "max_value": 1000,
+                       'class': 'form-control', 'placeholder': 'Enter the value', }),
+            'avg_participants': forms.NumberInput(
                 attrs={'step': 1,
                        "min_value": 0,
                        "max_value": 1000,

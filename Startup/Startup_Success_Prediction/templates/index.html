@@ -64,6 +64,16 @@
                             </div>
                             <div class="row" style="align-items: center;margin-bottom: 20px;">
                                 <div class="col-6 d-flex justify-content-start">
+                                    <label style="font-size: 17px;">{{ form.avg_participants.label_tag }}</label>
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group w-100">
+                                        {{form.avg_participants}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="align-items: center;margin-bottom: 20px;">
+                                <div class="col-6 d-flex justify-content-start">
                                     <label style="font-size: 17px;">{{ form.milestone_num.label_tag }}</label>
                                 </div>
                                 <div class="col-6">
@@ -226,7 +236,7 @@
                         </div>
                         <div class="row" style="margin-top: 50px;">
                             <div class="col d-flex justify-content-center">
-                                <button type="submit" onclick="change_text()" class="btn btn-lg"
+                                <button type="submit" onclick="" class="btn btn-lg"
                                     style="background-color: #4F6AFF;color: white;">Predict
                                     Success</button>
 
@@ -236,7 +246,7 @@
                 </form>
                 <div class="row" style="margin-top: 50px;">
                     <div class="col d-flex justify-content-center">
-                        <h2 id="result" style="color: #4F6AFF;"></h2>
+                        <h2 id="result" style="color: #4F6AFF;">{{show_result}}</h2>
 
                     </div>
                 </div>
@@ -248,8 +258,8 @@
     </div>
 </div>
 <script>
-    function change_text() {
-        document.getElementById("result").innerHTML = "Your Prediction Result is on it's way....";
+    function change_text(result) {
+        document.getElementById("result").innerHTML = result;
     }
 </script>
 
