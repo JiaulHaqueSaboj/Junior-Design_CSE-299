@@ -22,12 +22,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.androidproject.Adapter.searchRecyclerviewAdapter;
+import com.example.androidproject.Api.Prediction.predictionApi;
 import com.example.androidproject.Api.SearchList.searchListApi;
 import com.example.androidproject.Api.clusterList.clusterListApi;
 import com.example.androidproject.Api.verifyUser.VerifyUserApi;
 import com.example.androidproject.R;
 import com.example.androidproject.RetrofitClass;
 import com.example.androidproject.model.Cluster;
+import com.example.androidproject.model.PredictionModel;
 import com.example.androidproject.model.SearchModel;
 import com.example.androidproject.model.User;
 import com.google.android.gms.auth.api.Auth;
@@ -55,11 +57,12 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
 
-    private Cluster selectedCluster;
+//    private Cluster selectedCluster;
+    private String selectedCategory;
 
     Button logoutBtn,predict_btn;
-    private TextView usermail;
-    private EditText stp_name,stp_age,stp_relationship,stp_milestone,stp_mile_age01,stp_mile_age02,stp_total_fund,stp_fund_round,stp_fund_age01,stp_fund_age02;
+    private TextView usermail,prediction_result;
+    private EditText stp_name,stp_age,stp_relationship,stp_participants,stp_milestone,stp_mile_age01,stp_mile_age02,stp_total_fund,stp_fund_round,stp_fund_age01,stp_fund_age02;
     private Spinner stp_category;
     private CheckBox checkBox_angel,checkBox_vc,checkBox_roundA,checkBox_roundB,checkBox_roundC,checkBox_roundD;
 
@@ -68,12 +71,14 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
     private User loginuser = new User();
 
     //        Cluster initialization
-    private ArrayList<Cluster> items = new ArrayList<>();
-    private ArrayList<SearchModel> searchitems = new ArrayList<>();
+//    private ArrayList<Cluster> items = new ArrayList<>();
+//    private ArrayList<SearchModel> searchitems = new ArrayList<>();
+
+    private ArrayList<String> categoryList = new ArrayList<>();
 
     private searchRecyclerviewAdapter searchrecyclerviewadapter;
 
-    private ArrayAdapter<Cluster> adapter;
+//    private ArrayAdapter<Cluster> adapter;
 
 //    private String mail = "tawsifmahmud05@gmail.com";
     private String token = "Token e697bea2c349db8c61a55accf6c0546db5de0dd8";
@@ -85,6 +90,7 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         stp_name = findViewById(R.id.stp_name);
         stp_age = findViewById(R.id.stp_age);
         stp_relationship = findViewById(R.id.stp_relation);
+        stp_participants = findViewById(R.id.stp_avg_participants);
         stp_milestone = findViewById(R.id.stp_milestone);
         stp_mile_age01 = findViewById(R.id.stp_mile_age01);
         stp_mile_age02 = findViewById(R.id.stp_mile_age02);
@@ -94,7 +100,10 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         stp_fund_age02 = findViewById(R.id.stp_fund_age02);
         logoutBtn = (Button) findViewById(R.id.logoutBtn);
         predict_btn = findViewById(R.id.button_predict);
+
         usermail = findViewById(R.id.search_email);
+        prediction_result = findViewById(R.id.textID_prediction);
+
         stp_category = findViewById(R.id.stp_category);
 
         checkBox_angel = findViewById(R.id.checkBox_angel);
@@ -123,16 +132,19 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        setcategory();
+
 
         stp_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedCluster = (Cluster) adapterView.getSelectedItem();
+                selectedCategory = (String) adapterView.getSelectedItem();
+
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                selectedCluster = items.get(0);
+                selectedCategory = categoryList.get(0);
             }
         });
 
@@ -142,6 +154,8 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         predict_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                predict();
 
 //                searchfiles();
 //                    setRecyclerview();
@@ -196,64 +210,222 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 //        });
     }
 
-    private void setRecyclerview() {
-            searchrecyclerviewadapter = new searchRecyclerviewAdapter(getApplicationContext(),searchitems);
-            recyclerView.setAdapter(searchrecyclerviewadapter);
+    private void predict() {
 
 
 
-    }
+        int is_software=0 , is_web =0, is_advertise=0, is_biotech=0, is_consulting=0, is_ecommerce=0, is_enterprise =0, is_gaming =0, is_mobile =0, is_others = 0;
 
-    private void searchfiles() {
+        if (selectedCategory == "Software"){
+            is_software = 1;
+        }
+        else if(selectedCategory == "Web"){
+            is_web = 1;
+        }
+        else if(selectedCategory == "Mobile"){
+            is_mobile = 1;
+        }
+        else if (selectedCategory == "Enterprise"){
+            is_enterprise = 1;
+        }
+        else if(selectedCategory == "Advertising"){
+            is_advertise = 1;
+        }
+        else if(selectedCategory == "Gaming Co."){
+            is_gaming = 1;
+        }
+        else if (selectedCategory == "E-commerce"){
+            is_ecommerce = 1;
+        }
+        else if(selectedCategory == "Bio-tech"){
+            is_biotech = 1;
+        }
+        else if(selectedCategory == "Consulting"){
+            is_consulting = 1;
+        }
+        else if (selectedCategory == "Others"){
+            is_others = 1;
+        }
 
-        searchitems.clear();
+        int has_ABCD = 0;
 
-        // INITIALIZE RETROFIT
+        if( checkBox_roundA.isChecked() || checkBox_roundB.isChecked() || checkBox_roundC.isChecked() || checkBox_roundD.isChecked()){
+            has_ABCD = 1;
+        }
+
+        int has_investor = 0;
+
+        if( checkBox_vc.isChecked() || checkBox_angel.isChecked()){
+            has_investor = 1;
+        }
+
+        int has_seed = 0;
+
+        if( has_ABCD == 1 && has_investor == 1){
+            has_seed = 1;
+        }
+
+        int invalid_startup = 1;
+        if( has_ABCD == 1 && checkBox_vc.isChecked() && checkBox_angel.isChecked() ){
+            invalid_startup = 0;
+        }
+
+
+
+
+
+
+        float age_first_funding_year = Float.parseFloat(stp_fund_age01.getText().toString());
+        float age_last_funding_year = Float.parseFloat(stp_fund_age02.getText().toString());
+        float age_first_milestone_year = Float.parseFloat(stp_mile_age01.getText().toString());
+        float age_last_milestone_year = Float.parseFloat(stp_mile_age02.getText().toString());
+        float relationships = Float.parseFloat(stp_relationship.getText().toString());
+        float funding_rounds = Float.parseFloat(stp_fund_round.getText().toString());
+        float funding_total_usd = Float.parseFloat(stp_total_fund.getText().toString());
+        float milestones = Float.parseFloat(stp_milestone.getText().toString());
+        float avg_participants = Float.parseFloat(stp_participants.getText().toString());
+        float startUp_age_year = Float.parseFloat(stp_age.getText().toString());
+
         RetrofitClass retrofitClass = new RetrofitClass();
-        searchListApi searchListApi = retrofitClass.getRetrofit().create(searchListApi.class);
+        predictionApi predictionApi = retrofitClass.getRetrofit().create(predictionApi.class);
 
-        String keyword = stp_name.getText().toString();
-        String clusderid = String.valueOf(selectedCluster.getId());
 
 
         //CALL THE REQUEST
-        Call<List<SearchModel>> call = searchListApi.getSearchList(keyword,clusderid);
+        Call<List<PredictionModel>> call = predictionApi.getPrediction(age_first_funding_year,
+                age_last_funding_year,
+                age_first_milestone_year,
+                age_last_milestone_year,
+                relationships,
+                funding_rounds,
+                funding_total_usd,
+                milestones,
+                is_software,
+                is_web,
+                is_mobile,
+                is_enterprise,
+                is_advertise,
+                is_gaming,
+                is_ecommerce,
+                is_biotech,
+                is_consulting,
+                is_others,
+                avg_participants,
+                has_ABCD,
+                has_investor,
+                has_seed,
+                invalid_startup,
+                startUp_age_year
+                );
 
 
-        call.enqueue(new Callback<List<SearchModel>>() {
+        call.enqueue(new Callback<List<PredictionModel>>() {
             @Override
-            public void onResponse(Call<List<SearchModel>> call, Response<List<SearchModel>> response) {
+            public void onResponse(Call<List<PredictionModel>> call, Response<List<PredictionModel>> response) {
 
                 if(response.isSuccessful()){
                     Toast.makeText(getApplicationContext(),"successful",Toast.LENGTH_LONG).show();
-                    List<SearchModel> searchresult =response.body();
+                    List<PredictionModel> searchresult =response.body();
 
+                    PredictionModel model = searchresult.get(0);
 
-                    for(SearchModel model : searchresult){
-                        try{
-                            searchitems.add(model);
-                            Toast.makeText(getApplicationContext(),model.getId(),Toast.LENGTH_LONG).show();
-                        }catch(Exception e){
-
-                        }
-
+                    if (model.getStartup_status() == 1){
+                        prediction_result.setText(stp_name.getText().toString() + "!! will be Successfull!");
                     }
-                    for(SearchModel model : searchitems){
-                        model.setKeyword(keyword);
+                    else{
+                        prediction_result.setText(stp_name.getText().toString() + " have to work hard !!");
                     }
-                    searchrecyclerviewadapter.notifyDataSetChanged();
+
+
+
+
+//                    for(SearchModel model : searchresult){
+//                        try{
+//                            searchitems.add(model);
+//                            Toast.makeText(getApplicationContext(),model.getId(),Toast.LENGTH_LONG).show();
+//                        }catch(Exception e){
+//
+//                        }
+//
+//                    }
+//                    for(SearchModel model : searchitems){
+//                        model.setKeyword(keyword);
+//                    }
+//                    searchrecyclerviewadapter.notifyDataSetChanged();
                 }
 
             }
 
             @Override
-            public void onFailure(Call<List<SearchModel>> call, Throwable t) {
+            public void onFailure(Call<List<PredictionModel>> call, Throwable t) {
                 Log.d("verify",t.getMessage());
                 Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_LONG).show();
 
             }
         });
+
+
     }
+
+
+//    private void setRecyclerview() {
+//            searchrecyclerviewadapter = new searchRecyclerviewAdapter(getApplicationContext(),searchitems);
+//            recyclerView.setAdapter(searchrecyclerviewadapter);
+//
+//
+//
+//    }
+
+//    private void searchfiles() {
+//
+//        searchitems.clear();
+//
+//        // INITIALIZE RETROFIT
+//        RetrofitClass retrofitClass = new RetrofitClass();
+//        searchListApi searchListApi = retrofitClass.getRetrofit().create(searchListApi.class);
+//
+//        String keyword = stp_name.getText().toString();
+////        String clusderid = String.valueOf(selectedCluster.getId());
+//
+//
+//        //CALL THE REQUEST
+//        Call<List<SearchModel>> call = searchListApi.getSearchList(keyword,clusderid);
+//
+//
+//        call.enqueue(new Callback<List<SearchModel>>() {
+//            @Override
+//            public void onResponse(Call<List<SearchModel>> call, Response<List<SearchModel>> response) {
+//
+//                if(response.isSuccessful()){
+//                    Toast.makeText(getApplicationContext(),"successful",Toast.LENGTH_LONG).show();
+//                    List<SearchModel> searchresult =response.body();
+//
+//
+//                    for(SearchModel model : searchresult){
+//                        try{
+//                            searchitems.add(model);
+//                            Toast.makeText(getApplicationContext(),model.getId(),Toast.LENGTH_LONG).show();
+//                        }catch(Exception e){
+//
+//                        }
+//
+//                    }
+//                    for(SearchModel model : searchitems){
+//                        model.setKeyword(keyword);
+//                    }
+//                    searchrecyclerviewadapter.notifyDataSetChanged();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<SearchModel>> call, Throwable t) {
+//                Log.d("verify",t.getMessage());
+//                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_LONG).show();
+//
+//            }
+//        });
+//    }
 
     @Override
     protected void onStart() {
@@ -277,11 +449,10 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         if(result.isSuccess()){
             GoogleSignInAccount account=result.getSignInAccount();
 //            userName.setText(account.getDisplayName());
-//            userEmail.setText(account.getEmail());
+            usermail.setText(account.getEmail());
 //            userId.setText(account.getId());
 //            usermail.setText(account.getDisplayName());
-            checkuser(account.getEmail());
-
+//            checkuser(account.getEmail());
 
 //            checkuser(account.getEmail());
 
@@ -296,101 +467,101 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         }
     }
 
-    private void getcluster(int id) {
-        items.clear();
-
-        // INITIALIZE RETROFIT
-        RetrofitClass retrofitClass = new RetrofitClass();
-        clusterListApi clusterListApi = retrofitClass.getRetrofit().create(clusterListApi.class);
-
-
-        //CALL THE REQUEST
-        Call<List<Cluster>> call = clusterListApi.getClusterList(id);
-
-
-        call.enqueue(new Callback<List<Cluster>>() {
-            @Override
-            public void onResponse(Call<List<Cluster>> call, Response<List<Cluster>> response) {
-
-                if(response.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"successful",Toast.LENGTH_LONG).show();
-                    List<Cluster> clusters =response.body();
-
-                    for(Cluster cluster : clusters){
-                        try{
-                            items.add(cluster);
-                            adapter = new ArrayAdapter<Cluster>(getApplicationContext(),
-                                     android.R.layout.simple_spinner_dropdown_item,
-                                     items);
-                            stp_category.setAdapter(adapter);
-                        }catch(Exception e){
-
-                        }
-
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Cluster>> call, Throwable t) {
-                Log.d("verify",t.getMessage());
-                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-    }
-
-    private void checkuser(String email) {
-
-        // INITIALIZE RETROFIT
-        RetrofitClass retrofitClass = new RetrofitClass();
-        VerifyUserApi verifyUserApi = retrofitClass.getRetrofit().create(VerifyUserApi.class);
-
-
-        //CALL THE REQUEST
-        Call<List<User>> call = verifyUserApi.getUser(email);//"Token "+ token
-
-
-        call.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-
-                if(response.isSuccessful()){
-
-                    List<User> users =response.body();
-                    if(users.isEmpty()){
-                        predict_btn.setVisibility(View.GONE);
-                        usermail.setText("SignIn from web\nAnd Create Cluster to search");
-                        Toast.makeText(getApplicationContext(),"No user with this email",Toast.LENGTH_LONG).show();
-
-                    }else{
-                        Toast.makeText(getApplicationContext(),"successful",Toast.LENGTH_LONG).show();
-                        for(User user : users){
-                            loginuser = user;
-                            String responsetest = "";
-                            usermail.setText(user.getEmail());
-                            getcluster(user.getId());
-                            responsetest += user.getEmail();
-                            Log.v("Tag",""+responsetest);
-                            break;
-                        }
-                    }
-
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                Log.d("verify",t.getMessage());
-                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_LONG).show();
-
-            }
-        });
-    }
+//    private void getcluster(int id) {
+//        items.clear();
+//
+//        // INITIALIZE RETROFIT
+//        RetrofitClass retrofitClass = new RetrofitClass();
+//        clusterListApi clusterListApi = retrofitClass.getRetrofit().create(clusterListApi.class);
+//
+//
+//        //CALL THE REQUEST
+//        Call<List<Cluster>> call = clusterListApi.getClusterList(id);
+//
+//
+//        call.enqueue(new Callback<List<Cluster>>() {
+//            @Override
+//            public void onResponse(Call<List<Cluster>> call, Response<List<Cluster>> response) {
+//
+//                if(response.isSuccessful()){
+//                    Toast.makeText(getApplicationContext(),"successful",Toast.LENGTH_LONG).show();
+//                    List<Cluster> clusters =response.body();
+//
+//                    for(Cluster cluster : clusters){
+//                        try{
+//                            items.add(cluster);
+//                            adapter = new ArrayAdapter<Cluster>(getApplicationContext(),
+//                                     android.R.layout.simple_spinner_dropdown_item,
+//                                     items);
+//                            stp_category.setAdapter(adapter);
+//                        }catch(Exception e){
+//
+//                        }
+//
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Cluster>> call, Throwable t) {
+//                Log.d("verify",t.getMessage());
+//                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_LONG).show();
+//
+//            }
+//        });
+//
+//    }
+//
+//    private void checkuser(String email) {
+//
+//        // INITIALIZE RETROFIT
+//        RetrofitClass retrofitClass = new RetrofitClass();
+//        VerifyUserApi verifyUserApi = retrofitClass.getRetrofit().create(VerifyUserApi.class);
+//
+//
+//        //CALL THE REQUEST
+//        Call<List<User>> call = verifyUserApi.getUser(email);//"Token "+ token
+//
+//
+//        call.enqueue(new Callback<List<User>>() {
+//            @Override
+//            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+//
+//                if(response.isSuccessful()){
+//
+//                    List<User> users =response.body();
+//                    if(users.isEmpty()){
+//                        predict_btn.setVisibility(View.GONE);
+//                        usermail.setText("SignIn from web\nAnd Create Cluster to search");
+//                        Toast.makeText(getApplicationContext(),"No user with this email",Toast.LENGTH_LONG).show();
+//
+//                    }else{
+//                        Toast.makeText(getApplicationContext(),"successful",Toast.LENGTH_LONG).show();
+//                        for(User user : users){
+//                            loginuser = user;
+//                            String responsetest = "";
+//                            usermail.setText(user.getEmail());
+//                            getcluster(user.getId());
+//                            responsetest += user.getEmail();
+//                            Log.v("Tag",""+responsetest);
+//                            break;
+//                        }
+//                    }
+//
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<User>> call, Throwable t) {
+//                Log.d("verify",t.getMessage());
+//                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_LONG).show();
+//
+//            }
+//        });
+//    }
 
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -411,7 +582,25 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         startActivity(intent);
     }
 
+    private void setcategory() {
+        categoryList.add("Software");
+        categoryList.add("Web");
+        categoryList.add("Mobile");
+        categoryList.add("Enterprise");
+        categoryList.add("Advertising");
+        categoryList.add("Gaming Co.");
+        categoryList.add("E-commerce");
+        categoryList.add("Bio-tech");
+        categoryList.add("Consulting");
+        categoryList.add("Others");
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,categoryList);
+        stp_category.setAdapter(adapter);
+
+//        ArrayAdapter<String> branchListAdapter = new ArrayAdapter<>(getApplicationContext(),
+//                android.R.layout.simple_spinner_item, categoryList);
+//        stp_category.setAdapter(branchListAdapter);
+    }
 
 
 
