@@ -41,6 +41,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Query;
 
 public class SearchActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
     private static final int REQUEST_CODE_SPEECH_INPUT = 1;
@@ -214,6 +216,7 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
 
 
+
         int is_software=0 , is_web =0, is_advertise=0, is_biotech=0, is_consulting=0, is_ecommerce=0, is_enterprise =0, is_gaming =0, is_mobile =0, is_others = 0;
 
         if (selectedCategory == "Software"){
@@ -286,78 +289,72 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         float avg_participants = Float.parseFloat(stp_participants.getText().toString());
         float startUp_age_year = Float.parseFloat(stp_age.getText().toString());
 
+        Toast.makeText(getApplicationContext(),"waiting",Toast.LENGTH_LONG).show();
+
+
         RetrofitClass retrofitClass = new RetrofitClass();
         predictionApi predictionApi = retrofitClass.getRetrofit().create(predictionApi.class);
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("age_first_funding_year", age_first_funding_year);
+        jsonObject.addProperty("age_last_funding_year", age_last_funding_year);
+        jsonObject.addProperty("age_first_milestone_year", age_first_milestone_year);
+        jsonObject.addProperty("age_last_milestone_year", age_last_milestone_year);
+        jsonObject.addProperty("relationships", relationships);
+        jsonObject.addProperty("funding_rounds", funding_rounds);
+        jsonObject.addProperty("funding_total_usd", funding_total_usd);
+        jsonObject.addProperty("milestones", milestones);
+        jsonObject.addProperty("is_software", is_software);
+        jsonObject.addProperty("is_web", is_web);
+        jsonObject.addProperty("is_mobile", is_mobile);
+        jsonObject.addProperty("is_enterprise", is_enterprise);
+        jsonObject.addProperty("is_advertising", is_advertise);
+        jsonObject.addProperty("is_gamesvideo", is_gaming);
+        jsonObject.addProperty("is_ecommerce", is_ecommerce);
+        jsonObject.addProperty("is_biotech", is_biotech);
+        jsonObject.addProperty("is_consulting", is_consulting);
+        jsonObject.addProperty("is_othercategory", is_others);
+        jsonObject.addProperty("avg_participants", avg_participants);
+        jsonObject.addProperty("has_RoundABCD", has_ABCD);
+        jsonObject.addProperty("has_Investor", has_investor);
+        jsonObject.addProperty("has_Seed", has_seed);
+        jsonObject.addProperty("invalid_startup", invalid_startup);
+        jsonObject.addProperty("startUp_age_year", startUp_age_year);
+
 
 
 
         //CALL THE REQUEST
-        Call<List<PredictionModel>> call = predictionApi.getPrediction(age_first_funding_year,
-                age_last_funding_year,
-                age_first_milestone_year,
-                age_last_milestone_year,
-                relationships,
-                funding_rounds,
-                funding_total_usd,
-                milestones,
-                is_software,
-                is_web,
-                is_mobile,
-                is_enterprise,
-                is_advertise,
-                is_gaming,
-                is_ecommerce,
-                is_biotech,
-                is_consulting,
-                is_others,
-                avg_participants,
-                has_ABCD,
-                has_investor,
-                has_seed,
-                invalid_startup,
-                startUp_age_year
+        Call<PredictionModel> call = predictionApi.getPrediction(
+                jsonObject
                 );
 
 
-        call.enqueue(new Callback<List<PredictionModel>>() {
+
+        call.enqueue(new Callback<PredictionModel>() {
             @Override
-            public void onResponse(Call<List<PredictionModel>> call, Response<List<PredictionModel>> response) {
+            public void onResponse(Call<PredictionModel> call, Response<PredictionModel> response) {
 
                 if(response.isSuccessful()){
                     Toast.makeText(getApplicationContext(),"successful",Toast.LENGTH_LONG).show();
-                    List<PredictionModel> searchresult =response.body();
+                    PredictionModel model =response.body();
+                    Toast.makeText(getApplicationContext(),""+response.body().getInfo(),Toast.LENGTH_LONG).show();
 
-                    PredictionModel model = searchresult.get(0);
+
 
                     if (model.getStartup_status() == 1){
-                        prediction_result.setText(stp_name.getText().toString() + "!! will be Successfull!");
+                        prediction_result.setText(stp_name.getText().toString() + "!! will be Successfull!!");
                     }
                     else{
-                        prediction_result.setText(stp_name.getText().toString() + " have to work hard !!");
+                        prediction_result.setText(stp_name.getText().toString() + " have to work hard !");
+
                     }
-
-
-
-
-//                    for(SearchModel model : searchresult){
-//                        try{
-//                            searchitems.add(model);
-//                            Toast.makeText(getApplicationContext(),model.getId(),Toast.LENGTH_LONG).show();
-//                        }catch(Exception e){
-//
-//                        }
-//
-//                    }
-//                    for(SearchModel model : searchitems){
-//                        model.setKeyword(keyword);
-//                    }
-//                    searchrecyclerviewadapter.notifyDataSetChanged();
                 }
 
             }
 
             @Override
-            public void onFailure(Call<List<PredictionModel>> call, Throwable t) {
+            public void onFailure(Call<PredictionModel> call, Throwable t) {
                 Log.d("verify",t.getMessage());
                 Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_LONG).show();
 
