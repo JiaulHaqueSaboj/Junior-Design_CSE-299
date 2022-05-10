@@ -140,9 +140,9 @@ def homepage(request):
             result = json.loads(json_response)
 
             if result["Startup_status"] == 1:
-                show_result = "The Startup will be Successful"
+                show_result = name + " will be Successful."
             else:
-                show_result = "The Startup will not be Successful"
+                show_result = name + " have to work hard!"
 
             print("The pastebin URL is:" + str(result["Startup_status"]))
         return render(request, 'index.html', {'form': form, 'show_result': show_result})
